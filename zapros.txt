@@ -1,0 +1,60 @@
+-- 1) Список студентов с группой
+SELECT s.student_code, s.full_name, g.name AS group_name
+FROM students s
+LEFT JOIN groups g ON s.group_id = g.group_id
+ORDER BY g.name, s.full_name;
+
+-- 2) Оценки студента по ФИО (ILIKE)
+SELECT s.full_name, d.name AS discipline, sem.name AS semester, gr.grade
+FROM grades gr
+JOIN students s ON gr.student_id = s.student_id
+JOIN disciplines d ON gr.discipline_id = d.discipline_id
+JOIN semesters sem ON gr.semester_id = sem.semester_id
+WHERE s.full_name ILIKE '%Иванов%';
+
+-- 3) Средний балл по дисциплинам
+SELECT d.name, AVG(gr.grade)::numeric(10,2) AS avg_grade
+FROM disciplines d
+JOIN grades gr ON gr.discipline_id = d.discipline_id
+GROUP BY d.name
+ORDER BY avg_grade DESC;
+
+-- 4) Успеваемость групп (GROUP BY + HAVING)
+SELECT g.name, COUNT(gr.grade_id) AS cnt, AVG(gr.grade)::numeric(10,2) AS avg_grade
+FROM groups g
+JOIN students s ON s.group_id = g.group_id
+JOIN grades gr ON gr.student_id = s.student_id
+GROUP BY g.name
+HAVING COUNT(gr.grade_id) >= 3;
+
+-- 5) Студенты без оценок (LEFT JOIN + IS NULL)
+SELECT s.student_code, s.full_name
+FROM students s
+LEFT JOIN grades gr ON gr.student_id = s.student_id
+WHERE gr.grade_id IS NULL;
+
+-- 6) Самая высокая оценка (подзапрос)
+SELECT s.full_name, d.name, gr.grade
+FROM grades gr
+JOIN students s ON gr.student_id=s.student_id
+JOIN disciplines d ON gr.discipline_id=d.discipline_id
+WHERE gr.grade = (SELECT MAX(grade) FROM grades);
+
+-- 7) Нагрузка преподавателей (LEFT JOIN)
+SELECT t.full_name, COUNT(d.discipline_id) AS disciplines_count
+FROM teachers t
+LEFT JOIN disciplines d ON d.teacher_id = t.teacher_id
+GROUP BY t.full_name;
+
+-- 8) Посещаемость: процент присутствий по студенту
+SELECT s.full_name,
+       (SUM(CASE WHEN a.present THEN 1 ELSE 0 END)::numeric / COUNT(*))::numeric(10,2) AS rate
+FROM attendance a
+JOIN students s ON a.student_id = s.student_id
+GROUP BY s.full_name;
+
+-- 9) UPDATE: исправить оценку
+UPDATE grades SET grade = 5, graded_at = NOW() WHERE grade_id = 1;
+
+-- 10) DELETE: удалить оценку
+DELETE FROM grades WHERE grade_id = 5;
