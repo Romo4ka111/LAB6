@@ -417,3 +417,4 @@ void demoVulnerableDelete(pqxx::work& txn) {
     cout << "[DEMO] Выполнение заблокировано для безопасности." << endl;
     cout << "Подсказка: ' OR '1'='1" << endl;
 }
+//

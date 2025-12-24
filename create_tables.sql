@@ -70,3 +70,4 @@ CREATE TABLE attendance (
     present BOOLEAN NOT NULL DEFAULT TRUE,
     UNIQUE (student_id, discipline_id, semester_id, lesson_date)
 );
+--

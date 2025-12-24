@@ -25,3 +25,4 @@ db-init:
 	psql -U postgres -d students_db -f insert_data.sql
 
 .PHONY: all clean run db-init
+##

@@ -39,3 +39,4 @@ INSERT INTO attendance (student_id, discipline_id, semester_id, lesson_date, pre
 (3, 2, 1, '2024-09-06', TRUE),
 (1, 4, 1, '2024-09-10', TRUE),
 (4, 3, 1, '2024-09-11', FALSE);
+--

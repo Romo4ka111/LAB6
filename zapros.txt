@@ -58,3 +58,4 @@ UPDATE grades SET grade = 5, graded_at = NOW() WHERE grade_id = 1;
 
 -- 10) DELETE: удалить оценку
 DELETE FROM grades WHERE grade_id = 5;
+---------------------------------------------
